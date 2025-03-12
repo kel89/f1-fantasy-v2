@@ -6,25 +6,72 @@ adding a new "isDone" field as a boolean. The authorization rule below
 specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
-const schema = a.schema({
-  Todo: a
-    .model({
-      content: a.string(),
+const schema = a
+    .schema({
+        Driver: a.model({
+            id: a.id(),
+            first_name: a.string(),
+            last_name: a.string(),
+            abbreviation: a.string(),
+            number: a.string(),
+            team: a.string(),
+            results: a.hasMany("Result", "driver_id"),
+        }),
+
+        Race: a.model({
+            id: a.id(),
+            date: a.datetime(),
+            country: a.string(),
+            city: a.string(),
+            name: a.string(),
+            result: a.hasMany("Result", "race_id"),
+            rosters: a.hasMany("Roster", "race_id"),
+        }),
+
+        User: a.model({
+            id: a.id(),
+            email: a.string(),
+            given_name: a.string(),
+            family_name: a.string(),
+            nickname: a.string(),
+            total_points: a.integer(),
+            admin: a.boolean(),
+            rosters: a.hasMany("Roster", "user_id"),
+        }),
+
+        Roster: a.model({
+            id: a.id(),
+            driver_order: a.string().array(),
+            total_points: a.integer(),
+            breakdown: a.integer().array(),
+            user_id: a.id(),
+            race_id: a.id(),
+            user: a.belongsTo("User", "user_id"),
+            race: a.belongsTo("Race", "race_id"),
+        }),
+
+        Result: a.model({
+            id: a.id(),
+            points: a.integer(),
+            race_id: a.id(),
+            driver_id: a.id(),
+            race: a.belongsTo("Race", "race_id"),
+            driver: a.belongsTo("Driver", "driver_id"),
+        }),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
-});
+    .authorization((allow) => [allow.publicApiKey()]);
 
 export type Schema = ClientSchema<typeof schema>;
 
 export const data = defineData({
-  schema,
-  authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
-    // API Key is used for a.allow.public() rules
-    apiKeyAuthorizationMode: {
-      expiresInDays: 30,
+    schema,
+    authorizationModes: {
+        defaultAuthorizationMode: "apiKey",
+        // API Key is used for a.allow.public() rules
+        apiKeyAuthorizationMode: {
+            expiresInDays: 30,
+        },
     },
-  },
 });
 
 /*== STEP 2 ===============================================================
