@@ -1,4 +1,8 @@
 body {
+    margin: 0px;
+}
+
+/* body {
   margin: 0;
   background: linear-gradient(180deg, rgb(117, 81, 194), rgb(255, 255, 255));
   display: flex;
@@ -62,4 +66,4 @@ li:hover {
 a {
   font-weight: 800;
   text-decoration: none;
-}
+} */

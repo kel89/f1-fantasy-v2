@@ -2,6 +2,7 @@ import { generateClient } from "aws-amplify/api";
 import { fetchUserAttributes, signOut } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
 import { Schema } from "../../amplify/data/resource";
+import { Layout } from "../utils/layout";
 
 const client = generateClient<Schema>();
 
@@ -41,9 +42,5 @@ export function Home() {
         }
     };
 
-    return (
-        <main>
-            Home <button onClick={() => signOut()}>Signout</button>
-        </main>
-    );
+    return <Layout pageName="Home">Home</Layout>;
 }
