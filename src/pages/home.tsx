@@ -3,6 +3,7 @@ import { fetchUserAttributes, signOut } from "aws-amplify/auth";
 import { useEffect, useState } from "react";
 import { Schema } from "../../amplify/data/resource";
 import { Layout } from "../utils/layout";
+import RaceList from "../partials/home/raceList";
 
 const client = generateClient<Schema>();
 
@@ -42,5 +43,17 @@ export function Home() {
         }
     };
 
-    return <Layout pageName="Home">Home</Layout>;
+    return (
+        <Layout pageName="Home">
+            <div className="p-6 grid sm:grid-cols-2 grid-cols-1 gap-8 bg-gray-100">
+                <div>
+                    <RaceList />
+                </div>
+                <div className="flex flex-col gap-8 ">
+                    <div>{/* <LeaderBoard /> */}</div>
+                    <div>{/* <CommissionersCorner /> */}</div>
+                </div>
+            </div>
+        </Layout>
+    );
 }

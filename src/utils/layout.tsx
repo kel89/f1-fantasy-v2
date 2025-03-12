@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -26,7 +25,6 @@ interface LayoutProps {
 }
 
 export function Layout({ children, pageName }: LayoutProps) {
-    const { signOut } = useAuthenticator((context) => [context.signOut]);
     const naviage = useNavigate();
     const [open, setOpen] = useState(false);
 
