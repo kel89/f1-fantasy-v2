@@ -7,13 +7,11 @@ import {
     Routes,
     useParams,
 } from "react-router-dom";
+import { Home } from "./pages/home";
 
 const client = generateClient<Schema>();
 
 // Placeholders -----------------------------------------------
-function Home() {
-    return <main>This is home</main>;
-}
 
 function About() {
     return <main>About Page</main>;

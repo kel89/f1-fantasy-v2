@@ -31,8 +31,8 @@ const schema = a
         User: a.model({
             id: a.id(),
             email: a.string(),
-            given_name: a.string(),
-            family_name: a.string(),
+            givenName: a.string(),
+            familyName: a.string(),
             nickname: a.string(),
             total_points: a.integer(),
             admin: a.boolean(),
