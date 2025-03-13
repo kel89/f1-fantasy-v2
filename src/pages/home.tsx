@@ -14,7 +14,20 @@ export function Home() {
 
     useEffect(() => {
         initUser();
+        // addRace(); // this was just to test
     }, []);
+
+    const addRace = async () => {
+        // Add a race just to test here
+        const race = await client.models.Race.create({
+            id: "1",
+            date: new Date().toISOString(),
+            country: "USA",
+            city: "Austin",
+            name: "US Grand Prix",
+        });
+        console.log(race);
+    };
 
     const initUser = async () => {
         await checkUserAndAdd();
