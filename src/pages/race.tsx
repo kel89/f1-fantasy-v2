@@ -43,16 +43,28 @@ export default function Race({}) {
         setRefreshState(refreshState + 1);
     }, [openSetRoster]);
 
+    // useEffect(() => {
+    //     const d = async () => {
+    //         // For testing
+    //         const result = await client.models.Roster.delete({ id: rosterId });
+    //         console.log(result);
+    //     };
+
+    //     if (rosterId) {
+    //         d();
+    //     }
+    // }, [rosterId]);
+
     const loadData = async () => {
         await getUserData();
         await getRaceData();
         await getDriverData();
+        await updateRosterId();
     };
 
     const getUserData = async () => {
         const user = await fetchUserAttributes();
         setUserId(user.sub);
-        console.log("Set user id to", user.sub);
         const userData = await client.models.User.get({ id: user.sub });
         setIsAdmin(userData.data?.admin || false);
     };
@@ -71,39 +83,24 @@ export default function Race({}) {
                 ],
             }
         );
-        console.log(result);
         setRaceData(result.data as any);
     };
 
     const getDriverData = async () => {
         const result = await client.models.Driver.list();
-        console.log(result);
         setDrivers(result.data);
     };
 
-    // const getDriverData = async () => {
-    //     const result = await apiClient.graphql({
-    //         query: listDrivers,
-    //     });
-    //     setDrivers(result.data.listDrivers.items);
-    // };
-
-    // const getRaceData = async () => {
-    //     const result = await apiClient.graphql({
-    //         query: getRaceAndRosters,
-    //         variables: { id: id },
-    //     });
-    //     console.log(result);
-    //     setRaceData(result.data.getRace);
-    // };
-
-    // const getAdminStatus = async () => {
-    //     const result = await apiClient.graphql({
-    //         query: getUser,
-    //         variables: { id: user.username },
-    //     });
-    //     setIsAdmin(result.data.getUser.admin);
-    // };
+    // If there is a roster, lets keep track of it
+    const updateRosterId = async () => {
+        (raceData?.rosters as any).find((roster: Schema["Roster"]["type"]) => {
+            if (roster.user_id === userId) {
+                if (roster.id) {
+                    setRosterId(roster.id);
+                }
+            }
+        });
+    };
 
     return (
         <>

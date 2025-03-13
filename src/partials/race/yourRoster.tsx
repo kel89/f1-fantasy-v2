@@ -43,8 +43,6 @@ export default function YourRoster({
 
     // List of all rosters for the race
     let rosters = raceData.rosters;
-    console.log("Rosters", rosters);
-    console.log("UserId", userId);
 
     if (!userId) {
         return <></>;
@@ -78,6 +76,7 @@ export default function YourRoster({
             let userRoster = (rosters as any).find(
                 (x: any) => x.user_id == userId
             );
+            setRosterId(userRoster.id);
             return (
                 <div className="p-4 bg-white border shadow-lg">
                     <div className="flex justify-between mb-2">

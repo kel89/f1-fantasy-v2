@@ -7,8 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import Slide from "@mui/material/Slide";
-// import RosterEditor from "./RosterEditor";
-import { get } from "sortablejs";
 
 import { ReactNode } from "react";
 import { generateClient } from "aws-amplify/api";
@@ -67,7 +65,7 @@ export default function SetRosterDialog({
         let _roster;
         if (rosterId) {
             const result = await client.models.Roster.get({ id: rosterId });
-            _roster = result.data; // TODO what is this type error?
+            _roster = result.data;
         } else {
             _roster = null;
         }
@@ -75,11 +73,9 @@ export default function SetRosterDialog({
 
         // Define default driver order
         let _order = getDefaultOrder(drivers);
-
+        // setDriverOrder(_order);
         if (_roster && hasValidDriverOrder(_roster)) {
-            setDriverOrder(
-                _roster?.driver_order?.map((x: any) => x.split("-")[0])
-            );
+            setDriverOrder(_roster?.driver_order || _order);
         } else {
             setDriverOrder(_order);
         }
@@ -109,8 +105,9 @@ export default function SetRosterDialog({
                 }
             )
             .map((dat: any, i: any) => {
-                return { id: dat.abbreviation };
+                return `${dat.abbreviation}`;
             });
+        console.log("_order", _order);
         return _order;
     };
 
@@ -128,68 +125,45 @@ export default function SetRosterDialog({
         }
     };
 
-    const parseOrder = () => {
-        if (!driverOrder) {
-            return;
-        }
-        if (typeof driverOrder[0] == "object") {
-            return driverOrder.map((x: any, i: any) => `${x.id}-${i + 1}`);
-        }
-        // else, no change, so just send it
-        return driverOrder.map((x: any, i) => `${x.id}-${i + 1}`);
-    };
+    // const parseOrder = () => {
+    //     if (!driverOrder) {
+    //         return;
+    //     }
+    //     if (typeof driverOrder[0] == "object") {
+    //         return driverOrder.map((x: any, i: any) => `${x.id}-${i + 1}`);
+    //     }
+    //     // else, no change, so just send it
+    //     return driverOrder.map((x: any, i) => `${x.id}-${i + 1}`);
+    // };
 
     /**
      * Create a new roster, for this user, this race, and with
      * the given driver order
      */
     const saveNewRoster = async () => {
-        // // Create a roster, assigning it to the race and user
-        // let newOrder = parseOrder();
-        // let orderString = "[" + newOrder.map((d) => `"${d}"`).join(", ") + "]";
-        // const result = await apiClient.graphql({
-        //     query: createRoster,
-        //     variables: {
-        //         input: {
-        //             driver_order: orderString,
-        //             total_points: 0,
-        //             raceRostersId: raceId,
-        //             userRostersId: user.username,
-        //         },
-        //     },
-        // });
         const user = await fetchUserAttributes();
-        let newOrder = parseOrder();
+        // let newOrder = parseOrder();
         const result = await client.models.Roster.create({
-            driver_order: newOrder,
+            driver_order: driverOrder,
             total_points: 0,
             user_id: user.sub,
             race_id: raceId,
         });
-        console.log(result);
     };
 
     /**
      * Use the rosterId to update the roster, chaging only driver_order
      */
     const updateRoster = async () => {
-        // let newOrder = parseOrder();
-        // let orderString = "[" + newOrder.map((d) => `"${d}"`).join(", ") + "]";
-        // const result = await apiClient.graphql({
-        //     query: updateRosterMutation,
-        //     variables: { input: { id: rosterId, driver_order: orderString } },
-        // });
         const user = await fetchUserAttributes();
-        let newOrder = parseOrder();
+        // let newOrder = parseOrder();
         const result = await client.models.Roster.update({
             id: rosterId,
-            driver_order: newOrder,
+            driver_order: driverOrder,
         });
-        console.log(result);
     };
 
     const save = async () => {
-        console.log(rosterId);
         if (rosterId == undefined || rosterId == "") {
             await saveNewRoster();
         } else {

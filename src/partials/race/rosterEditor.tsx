@@ -22,6 +22,12 @@ export default function RosterEditor({
      * allow the user to update that order with some interace
      * and save that order in setDriverOrder, then a re-render should be automatic
      */
+    console.log("driverOrder", driverOrder);
+
+    const intermediateSetDriverOrder = (order: any) => {
+        let tweaked = order.map((x: String) => x.valueOf()).slice(0, 10);
+        setDriverOrder(tweaked);
+    };
 
     return (
         <div className="flex justify-center">
@@ -33,7 +39,7 @@ export default function RosterEditor({
                 </div>
                 <ReactSortable
                     list={driverOrder as any}
-                    setList={setDriverOrder as any}
+                    setList={(order) => intermediateSetDriverOrder(order)}
                     className="w-56"
                 >
                     {driverOrder.map((d, i) => {
@@ -49,8 +55,8 @@ export default function RosterEditor({
                                     ${i > 2 ? "bg-white" : ""}`}
                                 key={d}
                             >
-                                <b>{i + 1}</b> {driver.first_name}{" "}
-                                {driver.last_name}
+                                <b>{i + 1}</b> {driver?.first_name}{" "}
+                                {driver?.last_name}
                             </div>
                         );
                     })}
