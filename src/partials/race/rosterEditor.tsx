@@ -2,7 +2,7 @@ import { ReactSortable } from "react-sortablejs";
 import { Schema } from "../../../amplify/data/resource";
 
 interface RosterEditorProps {
-    rosterData: Schema["Roster"]["type"];
+    rosterData: Schema["Roster"]["type"] | null | undefined;
     driverData: Schema["Driver"]["type"];
     driverOrder: string[];
     setDriverOrder: (order: string[]) => void;
@@ -37,8 +37,8 @@ export default function RosterEditor({
                     className="w-56"
                 >
                     {driverOrder.map((d, i) => {
-                        let driver = driverData.find(
-                            (x) => x.abbreviation === d.id
+                        let driver = (driverData as any).find(
+                            (x: any) => x.abbreviation === d // this was d.id
                         );
                         return (
                             <div
@@ -47,7 +47,7 @@ export default function RosterEditor({
                                     ${i == 1 ? "bg-gray-300" : ""} 
                                     ${i == 2 ? "bg-yellow-500" : ""}
                                     ${i > 2 ? "bg-white" : ""}`}
-                                key={d.id}
+                                key={d}
                             >
                                 <b>{i + 1}</b> {driver.first_name}{" "}
                                 {driver.last_name}

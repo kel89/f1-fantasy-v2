@@ -22,7 +22,9 @@ const client = generateClient<Schema>();
 
 export default function Race({}) {
     const [userId, setUserId] = useState<string>();
-    const [raceData, setRaceData] = useState<Schema["Race"]["type"]>();
+    const [raceData, setRaceData] = useState<Schema["Race"]["type"] | null>(
+        null
+    );
     const [drivers, setDrivers] = useState<Schema["Driver"]["type"][]>();
     const [openSetRoster, setOpenSetRoster] = useState(false);
     const [refreshState, setRefreshState] = useState(0);
@@ -70,7 +72,7 @@ export default function Race({}) {
             }
         );
         console.log(result);
-        setRaceData(result.data);
+        setRaceData(result.data as any);
     };
 
     const getDriverData = async () => {

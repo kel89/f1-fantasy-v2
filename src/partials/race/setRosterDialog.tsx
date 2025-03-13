@@ -20,10 +20,13 @@ interface TransitionProps {
     children: ReactNode;
 }
 
-const Transition = forwardRef(function Transition(props: TransitionProps, ref) {
+const Transition = forwardRef<unknown, TransitionProps>(function Transition(
+    props,
+    ref
+) {
     return (
         <Slide direction="up" ref={ref} {...props}>
-            {props.children}
+            {props.children as React.ReactElement}
         </Slide>
     );
 });
@@ -47,8 +50,12 @@ export default function SetRosterDialog({
     raceId,
     refreshRaceData,
 }: SetRosterDialogProps) {
-    const [rosterData, setRosterData] = useState();
-    const [driverOrder, setDriverOrder] = useState();
+    const [rosterData, setRosterData] = useState<
+        Schema["Roster"]["type"] | null
+    >();
+    const [driverOrder, setDriverOrder] = useState<string[] | undefined>(
+        undefined
+    );
 
     useEffect(() => {
         if (drivers) {
@@ -59,7 +66,7 @@ export default function SetRosterDialog({
     const getData = async () => {
         let _roster;
         if (rosterId) {
-            const result = client.models.Roster.get({ id: rosterId });
+            const result = await client.models.Roster.get({ id: rosterId });
             _roster = result.data; // TODO what is this type error?
         } else {
             _roster = null;
@@ -69,18 +76,16 @@ export default function SetRosterDialog({
         // Define default driver order
         let _order = getDefaultOrder(drivers);
 
-        if (hasValidDriverOrder(_roster)) {
+        if (_roster && hasValidDriverOrder(_roster)) {
             setDriverOrder(
-                JSON.parse(_roster.driver_order[0]).map((x) => {
-                    return { id: x.split("-")[0] };
-                })
+                _roster?.driver_order?.map((x: any) => x.split("-")[0])
             );
         } else {
             setDriverOrder(_order);
         }
     };
 
-    const getDefaultOrder = (drivers) => {
+    const getDefaultOrder = (drivers: any) => {
         let TEAM_ORDER = [
             "Red Bull",
             "Ferrari",
@@ -94,27 +99,29 @@ export default function SetRosterDialog({
             "Kick",
         ];
         let _order = drivers
-            .sort((a, b) => {
-                let t1 = TEAM_ORDER.indexOf(a.team);
-                let t2 = TEAM_ORDER.indexOf(b.team);
-                t1 = t1 == -1 ? 100 : t1;
-                t2 = t2 == -1 ? 100 : t2;
-                return t1 - t2;
-            })
-            .map((dat, i) => {
+            .sort(
+                (a: Schema["Driver"]["type"], b: Schema["Driver"]["type"]) => {
+                    let t1 = TEAM_ORDER.indexOf(a.team || "");
+                    let t2 = TEAM_ORDER.indexOf(b.team || "");
+                    t1 = t1 == -1 ? 100 : t1;
+                    t2 = t2 == -1 ? 100 : t2;
+                    return t1 - t2;
+                }
+            )
+            .map((dat: any, i: any) => {
                 return { id: dat.abbreviation };
             });
         return _order;
     };
 
-    const hasValidDriverOrder = (roster) => {
+    const hasValidDriverOrder = (roster: Schema["Roster"]["type"]) => {
         if (!roster) {
             return false;
         } else if (!Object.keys(roster).includes("driver_order")) {
             return false;
         } else if (!roster.driver_order) {
             return false;
-        } else if (JSON.parse(roster.driver_order[0].length) < drivers.length) {
+        } else if (roster?.driver_order.length < drivers.length) {
             return false;
         } else {
             return true;
@@ -126,10 +133,10 @@ export default function SetRosterDialog({
             return;
         }
         if (typeof driverOrder[0] == "object") {
-            return driverOrder.map((x, i) => `${x.id}-${i + 1}`);
+            return driverOrder.map((x: any, i: any) => `${x.id}-${i + 1}`);
         }
         // else, no change, so just send it
-        return driverOrder.map((x, i) => `${x.id}-${i + 1}`);
+        return driverOrder.map((x: any, i) => `${x.id}-${i + 1}`);
     };
 
     /**
@@ -153,7 +160,6 @@ export default function SetRosterDialog({
         // });
         const user = await fetchUserAttributes();
         let newOrder = parseOrder();
-        let orderString = "[" + newOrder.map((d) => `"${d}"`).join(", ") + "]";
         const result = await client.models.Roster.create({
             driver_order: newOrder,
             total_points: 0,

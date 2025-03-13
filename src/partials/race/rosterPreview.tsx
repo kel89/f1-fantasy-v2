@@ -13,7 +13,7 @@ const client = generateClient<Schema>();
 
 interface RosterPreviewProps {
     id: string;
-    toggler: (x: number) => void;
+    toggler: number;
 }
 
 export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
@@ -31,11 +31,11 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
 
     // Sort the results if there are any?
     useEffect(() => {
-        if (rosterData && rosterData?.race?.result) {
-            let resultData = rosterData.race.result.items;
+        if (rosterData && (rosterData.race as any)?.result) {
+            let resultData = ((rosterData.race as any).result as any).items;
             resultData
-                .sort((a, b) => b.points - a.points)
-                .forEach((d, i) => (d["place"] = i + 1));
+                .sort((a: any, b: any) => b.points - a.points)
+                .forEach((d: any, i: any) => (d["place"] = i + 1));
             setRaceResults(resultData);
         }
     }, [rosterData]);
@@ -48,7 +48,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
         // setRosterData(result.data.getRoster);
         const result = await client.models.Roster.get({ id: id });
         console.log(result);
-        setRosterData(result.data);
+        setRosterData(result.data as any);
 
         const driverResult = await client.models.Driver.list();
         setDrivers(driverResult.data);
@@ -76,9 +76,12 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
         }
     };
 
-    const getBackgroundColor = (driverAbbreviation, place) => {
-        let match = raceResults.filter(
-            (x) => x?.driver?.abbreviation === driverAbbreviation
+    const getBackgroundColor = (
+        driverAbbreviation: string | undefined,
+        place: any
+    ) => {
+        let match: { place: number }[] = raceResults.filter(
+            (x: any) => x?.driver?.abbreviation === driverAbbreviation
         );
         if (match.length > 0) {
             let truePlace = match[0].place;
@@ -93,8 +96,8 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
 
     return (
         <div className="flex flex-col w-full gap-1">
-            {rosterData.driver_order.map((d, i) => {
-                let abbreviation = d.split("-")[0];
+            {rosterData.driver_order?.map((d, i) => {
+                let abbreviation = d?.split("-")[0];
                 let driver = drivers.find(
                     (x) => x.abbreviation === abbreviation
                 );
@@ -112,7 +115,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
                         </div>
                         {/* {getDriverImage(driver.abbreviation)}*/}
                         <ImageComponent
-                            imageName={`../assets/drivers/${abbreviation.toLowerCase()}.png`}
+                            imageName={`../assets/drivers/${abbreviation?.toLowerCase()}.png`}
                         />
                         <div className="ml-4 flex flex-col">
                             <div className="text-lg text-gray-800">

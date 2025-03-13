@@ -55,7 +55,9 @@ export default function YourRoster({
         // No rosters, or this user does not have one
         if (
             !rosters ||
-            rosters.find((roster) => roster.user_id === userId) === undefined
+            (rosters as any).find(
+                (roster: any) => roster.user_id === userId
+            ) === undefined
         ) {
             // Show button to set roster
             return (
@@ -73,7 +75,9 @@ export default function YourRoster({
             );
         } else {
             // There is a roster, so show edit button and roster preview
-            let userRoster = rosters.find((x) => x.user_id == userId);
+            let userRoster = (rosters as any).find(
+                (x: any) => x.user_id == userId
+            );
             return (
                 <div className="p-4 bg-white border shadow-lg">
                     <div className="flex justify-between mb-2">
@@ -101,7 +105,7 @@ export default function YourRoster({
         // User Has no roster, so just say fuck you
         if (
             rosters.length == 0 ||
-            rosters.find((x) => x.user.id == user.username) == undefined
+            (rosters as any).find((x: any) => x.user.id == userId) == undefined
         ) {
             return (
                 <div className="p-4 bg-white border text-xl font-racing text-gray-500 shadow-lg">
@@ -111,7 +115,9 @@ export default function YourRoster({
         }
         // User has a roster, show show the preview
         else {
-            let userRoster = rosters.find((x) => x.user.id == user.username);
+            let userRoster = (rosters as any).find(
+                (x: any) => x.user.id == userId
+            );
             return (
                 <div className="p-4 bg-white border shadow-lg">
                     <div className="p-2 text-gray-600 text-xl font-racing">
