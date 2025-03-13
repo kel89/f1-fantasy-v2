@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-loading": "^2.0.3",
     "react-router-dom": "^7.3.0",
+    "react-sortablejs": "^6.1.4",
     "tailwindcss": "^4.0.14"
   },
   "devDependencies": {

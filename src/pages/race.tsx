@@ -15,15 +15,18 @@ import ReactLoading from "react-loading";
 import { generateClient } from "aws-amplify/api";
 import { Schema } from "../../amplify/data/resource";
 import { fetchUserAttributes } from "aws-amplify/auth";
+import YourRoster from "../partials/race/yourRoster";
+import SetRosterDialog from "../partials/race/setRosterDialog";
 
 const client = generateClient<Schema>();
 
 export default function Race({}) {
+    const [userId, setUserId] = useState<string>();
     const [raceData, setRaceData] = useState<Schema["Race"]["type"]>();
     const [drivers, setDrivers] = useState<Schema["Driver"]["type"][]>();
     const [openSetRoster, setOpenSetRoster] = useState(false);
     const [refreshState, setRefreshState] = useState(0);
-    const [rosterId, setRosterId] = useState();
+    const [rosterId, setRosterId] = useState<string>();
     const [isAdmin, setIsAdmin] = useState(false);
     const { id } = useParams<{ id: string }>();
 
@@ -46,12 +49,26 @@ export default function Race({}) {
 
     const getUserData = async () => {
         const user = await fetchUserAttributes();
+        setUserId(user.sub);
+        console.log("Set user id to", user.sub);
         const userData = await client.models.User.get({ id: user.sub });
         setIsAdmin(userData.data?.admin || false);
     };
 
     const getRaceData = async () => {
-        const result = await client.models.Race.get({ id: id });
+        const result = await client.models.Race.get(
+            { id: id },
+            {
+                selectionSet: [
+                    "id",
+                    "date",
+                    "country",
+                    "city",
+                    "name",
+                    "rosters.*",
+                ],
+            }
+        );
         console.log(result);
         setRaceData(result.data);
     };
@@ -86,54 +103,6 @@ export default function Race({}) {
     //     setIsAdmin(result.data.getUser.admin);
     // };
 
-    /**
-     * Decides if should show a button to create your roster,
-     * or, if you already have one, lets show that
-     */
-    const renderYourRoster = () => {
-        if (!raceData) {
-            return;
-        }
-        const setButton = (
-            <button
-                onClick={() => setOpenSetRoster(true)}
-                className="btn w-full text-center py-2 border-2 rounded-lg border-dashed border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-            >
-                Set Your Roster!
-            </button>
-        );
-
-        // No rosters at all, so show button
-        if (raceData.rosters.length == 0) {
-            return setButton;
-        }
-
-        // Rosters, but not one for this user, show button
-        let userRoster = raceData.rosters.find(
-            (x) => x.user.id == user.username
-        );
-        if (userRoster == undefined) {
-            return setButton;
-        }
-
-        // This use has a roster, so show the preview
-        const click = () => {
-            setRosterId(userRoster.id);
-            setOpenSetRoster(true);
-        };
-        return (
-            <div className="p-4 bg-white border rounded-lg">
-                <button
-                    onClick={click}
-                    className="btn w-full py-2 mb-2 border border-blue-500 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white"
-                >
-                    Edit Roster
-                </button>
-                <RosterPreview id={userRoster.id} toggler={refreshState} />
-            </div>
-        );
-    };
-
     return (
         <>
             <Layout pageName={raceData == undefined ? "Race" : raceData.city}>
@@ -157,13 +126,14 @@ export default function Race({}) {
                             </div>
                             <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
                                 <div>
-                                    {/* <YourRoster
+                                    <YourRoster
+                                        userId={userId || ""}
                                         raceData={raceData}
-                                        drivers={drivers}
+                                        drivers={drivers || []}
                                         setOpenSetRoster={setOpenSetRoster}
                                         setRosterId={setRosterId}
                                         refreshState={refreshState}
-                                    /> */}
+                                    />
                                 </div>
                                 <div className="flex flex-col gap-4">
                                     {/* <RosterList
@@ -198,14 +168,14 @@ export default function Race({}) {
                     )}
                 </div>
             </Layout>
-            {/* <SetRosterDialog
+            <SetRosterDialog
                 drivers={drivers}
                 open={openSetRoster}
                 setOpen={setOpenSetRoster}
-                rosterId={rosterId}
-                raceId={id}
+                rosterId={rosterId || ""}
+                raceId={id || ""}
                 refreshRaceData={getRaceData}
-            /> */}
+            />
         </>
     );
 }

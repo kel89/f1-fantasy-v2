@@ -16,6 +16,7 @@ export function Home() {
     useEffect(() => {
         initUser();
         // addRace(); // this was just to test
+        // addDrivers();
     }, []);
 
     const addRace = async () => {
@@ -28,6 +29,48 @@ export function Home() {
             name: "Miami Grand Prix",
         });
         console.log(race);
+    };
+
+    const addDrivers = async () => {
+        // Just for testing setup
+        const drivers = [
+            {
+                id: "1",
+                first_name: "Lewis",
+                last_name: "Hamilton",
+                abbreviation: "HAM",
+                number: "44",
+                team: "Ferrari",
+            },
+            {
+                id: "2",
+                first_name: "Charles",
+                last_name: "Leclerc",
+                abbreviation: "LEC",
+                number: "16",
+                team: "Ferrari",
+            },
+            {
+                id: "3",
+                first_name: "Max",
+                last_name: "Verstappen",
+                abbreviation: "VER",
+                number: "33",
+                team: "Red Bull",
+            },
+            {
+                id: "4",
+                first_name: "Valtteri",
+                last_name: "Bottas",
+                abbreviation: "BOT",
+                number: "77",
+                team: "Mercedes",
+            },
+        ];
+        for (let driver of drivers) {
+            const result = await client.models.Driver.create(driver);
+            console.log(result);
+        }
     };
 
     const initUser = async () => {
