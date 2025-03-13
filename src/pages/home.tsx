@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Schema } from "../../amplify/data/resource";
 import { Layout } from "../utils/layout";
 import RaceList from "../partials/home/raceList";
+import LeaderBoard from "../partials/home/leaderboard";
 
 const client = generateClient<Schema>();
 
@@ -20,11 +21,11 @@ export function Home() {
     const addRace = async () => {
         // Add a race just to test here
         const race = await client.models.Race.create({
-            id: "1",
-            date: new Date().toISOString(),
+            id: "2",
+            date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
             country: "USA",
-            city: "Austin",
-            name: "US Grand Prix",
+            city: "Miain",
+            name: "Miami Grand Prix",
         });
         console.log(race);
     };
@@ -42,10 +43,10 @@ export function Home() {
             // user is not in DB, add them
             let addedUser = await client.models.User.create({
                 id: userAttributes.sub,
-                email: userAttributes.email,
-                givenName: userAttributes.given_name,
-                familyName: userAttributes.family_name,
-                nickname: userAttributes.nickname,
+                email: userAttributes.email || "",
+                givenName: userAttributes.given_name || "",
+                familyName: userAttributes.family_name || "",
+                nickname: userAttributes.nickname || "",
                 total_points: 0,
                 admin: false,
             });
@@ -63,7 +64,9 @@ export function Home() {
                     <RaceList />
                 </div>
                 <div className="flex flex-col gap-8 ">
-                    <div>{/* <LeaderBoard /> */}</div>
+                    <div>
+                        <LeaderBoard />
+                    </div>
                     <div>{/* <CommissionersCorner /> */}</div>
                 </div>
             </div>

@@ -8,6 +8,7 @@ import {
     useParams,
 } from "react-router-dom";
 import { Home } from "./pages/home";
+import Race from "./pages/race";
 
 const client = generateClient<Schema>();
 
@@ -25,10 +26,10 @@ function Settings() {
     return <main>Settings Page</main>;
 }
 
-function Race() {
-    const { id } = useParams<{ id: string }>();
-    return <main>Race Page for race {id}</main>;
-}
+// function Race() {
+//     const { id } = useParams<{ id: string }>();
+//     return <main>Race Page for race {id}</main>;
+// }
 // -----------------------------------------------------------
 function App() {
     return (

@@ -8,12 +8,13 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { generateClient } from "aws-amplify/api";
 import { Schema } from "../../../amplify/data/resource";
+import RaceCard from "./raceCard";
 
 const client = generateClient<Schema>();
 
 export default function RaceList({}) {
     const [expanded, setExpanded] = useState(true);
-    const [raceData, setRaceData] = useState();
+    const [raceData, setRaceData] = useState<Schema["Race"]["type"][]>();
 
     useEffect(() => {
         getRaceData();
@@ -22,7 +23,7 @@ export default function RaceList({}) {
     const getRaceData = async () => {
         const result = await client.models.Race.list();
         console.log(result);
-        // setRaceData(result.data.listRaces.items);
+        setRaceData(result.data);
     };
 
     // Comparison date of today, but at midnight so we show
@@ -31,7 +32,6 @@ export default function RaceList({}) {
     refDate.setHours(0);
     refDate.setMinutes(0);
 
-    // return <>Dealing with something else</>;
     return (
         <>
             <Accordion
@@ -42,9 +42,6 @@ export default function RaceList({}) {
                     expandIcon={<ExpandMoreIcon />}
                     id="raceListAccordion"
                 >
-                    {/* <Typography>
-                    Race List
-                </Typography> */}
                     <h1 className="font-racing text-2xl text-gray-700">
                         Race List
                     </h1>
@@ -59,7 +56,8 @@ export default function RaceList({}) {
                             {raceData
                                 .sort(
                                     (a, b) =>
-                                        new Date(a.date) - new Date(b.date)
+                                        new Date(a.date).getTime() -
+                                        new Date(b.date).getTime()
                                 )
                                 .filter((x) => new Date(x.date) >= refDate)
                                 .filter((d, i) => i == 0)
@@ -72,7 +70,7 @@ export default function RaceList({}) {
                                             <h2 className="font-bold text-gray-500">
                                                 Next Race
                                             </h2>
-                                            {/* <RaceCard data={race} key={0} /> */}
+                                            <RaceCard data={race} key={0} />
                                         </div>
                                     );
                                 })}
@@ -80,14 +78,15 @@ export default function RaceList({}) {
                                 All Races
                             </h2>
                             <div className="flex flex-col gap-2">
-                                {/* {raceData
+                                {raceData
                                     .sort(
                                         (a, b) =>
-                                            new Date(a.date) - new Date(b.date)
+                                            new Date(a.date).getTime() -
+                                            new Date(b.date).getTime()
                                     )
                                     .map((race, i) => {
                                         return <RaceCard data={race} key={i} />;
-                                    })} */}
+                                    })}
                             </div>
                         </div>
                     )}
