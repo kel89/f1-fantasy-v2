@@ -1,13 +1,8 @@
-// import { List, ListItem, ListItemText } from "@mui/material";
-// import { API } from "aws-amplify";
 import { generateClient } from "aws-amplify/api";
 import { useEffect, useState } from "react";
 import ReactLoading from "react-loading";
 import { Schema } from "../../../amplify/data/resource";
 import ImageComponent from "../../utils/imageComponent";
-// import { generateClient } from "@aws-amplify/api";
-// import { getRoster, listDrivers } from "../../graphql/queries";
-// import { getDetailedRoster } from "../../graphql/customQueries";
 
 const client = generateClient<Schema>();
 

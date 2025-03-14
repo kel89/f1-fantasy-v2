@@ -137,13 +137,6 @@ export default function Race({}) {
                                     />
                                 </div>
                                 <div className="flex flex-col gap-4">
-                                    {/* <RosterList
-                                        rosters={
-                                            !raceData
-                                                ? []
-                                                : raceData.rosters?.items
-                                        }
-                                    /> */}
                                     <RosterList
                                         rosters={
                                             !raceData

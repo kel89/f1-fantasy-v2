@@ -43,7 +43,7 @@ export default function PopUpRosterPreview({
                 <span className="font-racing">{rosterOwner}</span>
             </DialogTitle>
             <DialogContent>
-                <RosterPreview id={rosterId} toggler={rosterId as any} />
+                <RosterPreview id={rosterId || ""} toggler={rosterId as any} />
             </DialogContent>
         </Dialog>
     );
