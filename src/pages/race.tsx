@@ -17,6 +17,7 @@ import { Schema } from "../../amplify/data/resource";
 import { fetchUserAttributes } from "aws-amplify/auth";
 import YourRoster from "../partials/race/yourRoster";
 import SetRosterDialog from "../partials/race/setRosterDialog";
+import RosterList from "../partials/race/rosterList";
 
 const client = generateClient<Schema>();
 
@@ -80,6 +81,7 @@ export default function Race({}) {
                     "city",
                     "name",
                     "rosters.*",
+                    "rosters.user.*",
                 ],
             }
         );
@@ -142,6 +144,13 @@ export default function Race({}) {
                                                 : raceData.rosters?.items
                                         }
                                     /> */}
+                                    <RosterList
+                                        rosters={
+                                            !raceData
+                                                ? []
+                                                : (raceData.rosters as unknown as Schema["Roster"]["type"][])
+                                        }
+                                    />
                                     {/* {raceData.result?.items.length > 0 ? (
                                         <ResultsPreview
                                             results={raceData.result?.items}
