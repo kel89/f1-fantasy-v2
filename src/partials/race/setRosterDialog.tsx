@@ -107,7 +107,6 @@ export default function SetRosterDialog({
             .map((dat: any, i: any) => {
                 return `${dat.abbreviation}`;
             });
-        console.log("_order", _order);
         return _order;
     };
 
@@ -205,7 +204,6 @@ export default function SetRosterDialog({
             </AppBar>
             {drivers != undefined && driverOrder != undefined ? (
                 <RosterEditor
-                    rosterData={rosterData}
                     driverData={drivers}
                     driverOrder={driverOrder}
                     setDriverOrder={setDriverOrder}

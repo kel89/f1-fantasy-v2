@@ -19,6 +19,7 @@ import YourRoster from "../partials/race/yourRoster";
 import SetRosterDialog from "../partials/race/setRosterDialog";
 import RosterList from "../partials/race/rosterList";
 import RaceEditor from "../partials/race/raceEditor";
+import ScoreRace from "../partials/race/scoreRace";
 
 const client = generateClient<Schema>();
 
@@ -84,7 +85,7 @@ export default function Race({}) {
 
     // If there is a roster, lets keep track of it
     const updateRosterId = async () => {
-        (raceData?.rosters as any).find((roster: Schema["Roster"]["type"]) => {
+        (raceData?.rosters as any)?.find((roster: Schema["Roster"]["type"]) => {
             if (roster.user_id === userId) {
                 if (roster.id) {
                     setRosterId(roster.id);

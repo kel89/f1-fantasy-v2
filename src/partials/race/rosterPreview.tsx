@@ -36,13 +36,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
     }, [rosterData]);
 
     const getData = async () => {
-        // const result = await apiClient.graphql({
-        //     query: getDetailedRoster,
-        //     variables: { id: id },
-        // });
-        // setRosterData(result.data.getRoster);
         const result = await client.models.Roster.get({ id: id });
-        console.log(result);
         setRosterData(result.data as any);
 
         const driverResult = await client.models.Driver.list();

@@ -2,14 +2,12 @@ import { ReactSortable } from "react-sortablejs";
 import { Schema } from "../../../amplify/data/resource";
 
 interface RosterEditorProps {
-    rosterData: Schema["Roster"]["type"] | null | undefined;
     driverData: Schema["Driver"]["type"];
     driverOrder: string[];
     setDriverOrder: (order: string[]) => void;
 }
 
 export default function RosterEditor({
-    rosterData,
     driverData,
     driverOrder,
     setDriverOrder,

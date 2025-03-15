@@ -76,7 +76,7 @@ export default function YourRoster({
             let userRoster = (rosters as any).find(
                 (x: any) => x.user_id == userId
             );
-            setRosterId(userRoster.id);
+            // setRosterId(userRoster.id); // This was causing an error, but not sure if removing is okay?
             return (
                 <div className="p-4 bg-white border shadow-lg">
                     <div className="flex justify-between mb-2">
