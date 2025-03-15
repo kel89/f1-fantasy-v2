@@ -18,6 +18,7 @@ import { fetchUserAttributes } from "aws-amplify/auth";
 import YourRoster from "../partials/race/yourRoster";
 import SetRosterDialog from "../partials/race/setRosterDialog";
 import RosterList from "../partials/race/rosterList";
+import RaceEditor from "../partials/race/raceEditor";
 
 const client = generateClient<Schema>();
 
@@ -43,18 +44,6 @@ export default function Race({}) {
     useEffect(() => {
         setRefreshState(refreshState + 1);
     }, [openSetRoster]);
-
-    // useEffect(() => {
-    //     const d = async () => {
-    //         // For testing
-    //         const result = await client.models.Roster.delete({ id: rosterId });
-    //         console.log(result);
-    //     };
-
-    //     if (rosterId) {
-    //         d();
-    //     }
-    // }, [rosterId]);
 
     const loadData = async () => {
         await getUserData();
@@ -122,7 +111,10 @@ export default function Race({}) {
                                 <div>
                                     {new Date(
                                         raceData.date
-                                    ).toLocaleDateString()}
+                                    ).toLocaleDateString()}{" "}
+                                    {new Date(
+                                        raceData.date
+                                    ).toLocaleTimeString()}
                                 </div>
                             </div>
                             <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
@@ -151,10 +143,10 @@ export default function Race({}) {
                                     ) : null} */}
                                     {isAdmin ? (
                                         <>
-                                            {/* <RaceEditor
+                                            <RaceEditor
                                                 raceData={raceData}
                                                 getRaceData={getRaceData}
-                                            /> */}
+                                            />
                                             {/* <ScoreRace
                                                 raceData={raceData}
                                                 drivers={drivers}
