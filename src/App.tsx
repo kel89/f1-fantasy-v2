@@ -9,27 +9,11 @@ import {
 } from "react-router-dom";
 import { Home } from "./pages/home";
 import Race from "./pages/race";
+import About from "./pages/about";
+import Settings from "./pages/settings";
 
 const client = generateClient<Schema>();
 
-// Placeholders -----------------------------------------------
-
-function About() {
-    return <main>About Page</main>;
-}
-
-function Admin() {
-    return <main>Admin Page</main>;
-}
-
-function Settings() {
-    return <main>Settings Page</main>;
-}
-
-// function Race() {
-//     const { id } = useParams<{ id: string }>();
-//     return <main>Race Page for race {id}</main>;
-// }
 // -----------------------------------------------------------
 function App() {
     return (
@@ -37,7 +21,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/admin" element={<Admin />} />
+                {/* <Route path="/admin" element={<Admin />} /> */}
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/race/:id" element={<Race />} />
             </Routes>
