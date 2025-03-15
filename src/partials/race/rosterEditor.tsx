@@ -23,7 +23,8 @@ export default function RosterEditor({
     console.log("driverOrder", driverOrder);
 
     const intermediateSetDriverOrder = (order: any) => {
-        let tweaked = order.map((x: String) => x.valueOf()).slice(0, 10);
+        // let tweaked = order.map((x: String) => x.valueOf()).slice(0, 10);
+        let tweaked = order.map((x: String) => x.valueOf());
         setDriverOrder(tweaked);
     };
 

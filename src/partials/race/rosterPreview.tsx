@@ -85,7 +85,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
 
     return (
         <div className="flex flex-col w-full gap-1">
-            {rosterData.driver_order?.map((d, i) => {
+            {rosterData.driver_order?.slice(0, 10).map((d, i) => {
                 let abbreviation = d?.split("-")[0];
                 let driver = drivers.find(
                     (x) => x.abbreviation === abbreviation
