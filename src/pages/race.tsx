@@ -20,6 +20,7 @@ import SetRosterDialog from "../partials/race/setRosterDialog";
 import RosterList from "../partials/race/rosterList";
 import RaceEditor from "../partials/race/raceEditor";
 import ScoreRace from "../partials/race/scoreRace";
+import ResultsPreview from "../partials/race/resultsPreview";
 
 const client = generateClient<Schema>();
 
@@ -72,9 +73,12 @@ export default function Race({}) {
                     "name",
                     "rosters.*",
                     "rosters.user.*",
+                    "result.*",
+                    "result.driver.*",
                 ],
             }
         );
+        console.log("Race Data", result.data);
         setRaceData(result.data as any);
     };
 
@@ -137,23 +141,25 @@ export default function Race({}) {
                                                 : (raceData.rosters as unknown as Schema["Roster"]["type"][])
                                         }
                                     />
-                                    {/* {raceData.result?.items.length > 0 ? (
+                                    {raceData.result?.length > 0 ? (
                                         <ResultsPreview
-                                            results={raceData.result?.items}
+                                            results={
+                                                raceData.result as unknown as Schema["Result"]["type"][]
+                                            }
                                         />
-                                    ) : null} */}
+                                    ) : null}
                                     {isAdmin ? (
                                         <>
                                             <RaceEditor
                                                 raceData={raceData}
                                                 getRaceData={getRaceData}
                                             />
-                                            {/* <ScoreRace
+                                            <ScoreRace
                                                 raceData={raceData}
                                                 drivers={drivers}
                                                 getRaceData={getRaceData}
                                                 getDriverData={getDriverData}
-                                            /> */}
+                                            />
                                         </>
                                     ) : null}
                                 </div>

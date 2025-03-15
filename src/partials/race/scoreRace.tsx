@@ -46,71 +46,76 @@ export default function ScoreRace({
 
     useEffect(() => {
         // Set the default driver order
-        let _order = getDefaultOrder(drivers);
-        setDriverOrder(_order);
-    }, []);
+        if (drivers) {
+            let _order = getDefaultOrder(
+                drivers as unknown as Schema["Driver"]["type"]
+            );
+            setDriverOrder(_order);
+        }
+    }, [drivers]);
 
-    const getDefaultOrder = (drivers) => {
+    const getDefaultOrder = (drivers: any) => {
         let TEAM_ORDER = [
-            "Mercedes",
             "Red Bull",
             "Ferrari",
             "McLaren",
-            "Alpine",
+            "Mercedes",
             "Aston Martin",
-            "Haas",
-            "Alpha Tauri",
             "Williams",
-            "Alpha Romeo",
+            "Alpine",
+            "Haas",
+            "RB",
+            "Kick",
         ];
         let _order = drivers
-            .sort((a, b) => {
-                let t1 = TEAM_ORDER.indexOf(a.team);
-                let t2 = TEAM_ORDER.indexOf(b.team);
-                t1 = t1 == -1 ? 100 : t1;
-                t2 = t2 == -1 ? 100 : t2;
-                return t1 - t2;
-            })
-            .map((dat, i) => {
-                return { id: dat.abbreviation };
+            .sort(
+                (a: Schema["Driver"]["type"], b: Schema["Driver"]["type"]) => {
+                    let t1 = TEAM_ORDER.indexOf(a.team || "");
+                    let t2 = TEAM_ORDER.indexOf(b.team || "");
+                    t1 = t1 == -1 ? 100 : t1;
+                    t2 = t2 == -1 ? 100 : t2;
+                    return t1 - t2;
+                }
+            )
+            .map((dat: any, i: any) => {
+                return `${dat.abbreviation}`;
             });
         return _order;
     };
 
     const saveResultsOrder = async () => {
         setLoading(true);
-        const promises = driverOrder.slice(0, 10).map(async (driver, i) => {
+        const promises = driverOrder?.map(async (driver, i) => {
             let result = {
-                id: driver.id,
+                id: driver,
                 position: i + 1,
                 points: mapPositionToPoints(i + 1),
             };
             console.log(result);
-            let driverId = getDriverIdFromAbbreviation(driver.id);
-            return client.graphql({
-                query: createResult,
-                variables: {
-                    input: {
-                        points: result.points,
-                        raceResultId: raceData.id,
-                        driverResultsId: driverId,
-                    },
-                },
+            let driverId = getDriverIdFromAbbreviation(driver);
+            return client.models.Result.create({
+                points: result.points,
+                race_id: raceData.id,
+                driver_id: driverId,
             });
         });
-
-        await Promise.all(promises);
+        if (promises) {
+            await Promise.all(promises);
+        } else {
+            window.alert("there was an issue withe the promises");
+            setLoading(false);
+        }
         await getRaceData();
         await getDriverData();
         setLoading(false);
     };
 
-    const getDriverIdFromAbbreviation = (abbreviation) => {
+    const getDriverIdFromAbbreviation = (abbreviation: string) => {
         let driver = drivers.find((x) => x.abbreviation === abbreviation);
-        return driver.id;
+        return driver?.id;
     };
 
-    const mapPositionToPoints = (position) => {
+    const mapPositionToPoints = (position: number) => {
         switch (position) {
             case 1:
                 return 25;

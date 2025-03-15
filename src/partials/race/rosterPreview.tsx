@@ -102,7 +102,6 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
                         <div className="font-bold text-gray-800 text-xl pl-1">
                             {i + 1}
                         </div>
-                        {/* {getDriverImage(driver.abbreviation)}*/}
                         <ImageComponent
                             imageName={`../assets/drivers/${abbreviation?.toLowerCase()}.png`}
                         />
