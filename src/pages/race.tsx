@@ -84,6 +84,7 @@ export default function Race({}) {
 
     const getDriverData = async () => {
         const result = await client.models.Driver.list();
+        console.log("Drivers", result.data);
         setDrivers(result.data);
     };
 
