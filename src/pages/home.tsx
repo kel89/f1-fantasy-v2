@@ -16,7 +16,7 @@ export function Home() {
     useEffect(() => {
         initUser();
         // addRace(); // this was just to test
-        // addDrivers();
+        // addDrivers();git com
     }, []);
 
     const addRace = async () => {
@@ -132,7 +132,7 @@ export function Home() {
             },
         ];
         for (let driver of drivers) {
-            const result = await client.models.Driver.create(driver);
+            const result = await client.models.Driver.create(driver as any);
             console.log(result);
         }
     };
