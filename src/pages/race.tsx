@@ -143,9 +143,7 @@ export default function Race({}) {
                                     />
                                     {raceData.result?.length > 0 ? (
                                         <ResultsPreview
-                                            results={
-                                                raceData.result as unknown as Schema["Result"]["type"][]
-                                            }
+                                            results={raceData.result as any}
                                         />
                                     ) : null}
                                     {isAdmin ? (
@@ -154,12 +152,12 @@ export default function Race({}) {
                                                 raceData={raceData}
                                                 getRaceData={getRaceData}
                                             />
-                                            <ScoreRace
+                                            {/* <ScoreRace
                                                 raceData={raceData}
                                                 drivers={drivers}
                                                 getRaceData={getRaceData}
                                                 getDriverData={getDriverData}
-                                            />
+                                            /> */}
                                         </>
                                     ) : null}
                                 </div>

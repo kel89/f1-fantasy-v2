@@ -41,19 +41,19 @@ export default function RaceEditor({ raceData, getRaceData }: RaceEditorProps) {
         setLoading(false);
     };
 
-    const updateCountryText = (val) => {
+    const updateCountryText = (val: any) => {
         setCountry(val.target.value);
     };
 
-    const updateCityText = (val) => {
+    const updateCityText = (val: any) => {
         setCity(val.target.value);
     };
 
-    const updateRaceNameText = (val) => {
+    const updateRaceNameText = (val: any) => {
         setRaceName(val.target.value);
     };
 
-    const updateDate = (val) => {
+    const updateDate = (val: any) => {
         setDate(val);
     };
 
@@ -97,11 +97,7 @@ export default function RaceEditor({ raceData, getRaceData }: RaceEditorProps) {
                     />
                 </div>
                 <div className="pb-4">
-                    <DateTimePicker
-                        fullWidth
-                        value={date}
-                        onChange={updateDate}
-                    />
+                    <DateTimePicker value={date} onChange={updateDate} />
                 </div>
                 <div className="max-w-xs">
                     <Button

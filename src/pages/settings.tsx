@@ -29,7 +29,7 @@ export default function Settings() {
         setLoading(false);
     };
 
-    const updateTextBox = (val) => {
+    const updateTextBox = (val: any) => {
         setNewName(val.target.value);
     };
 

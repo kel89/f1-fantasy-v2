@@ -143,56 +143,87 @@ export default function ScoreRace({
     };
 
     const scoreRosters = async () => {
+        // OLD ----------------------------------------------
+        // setLoading(true);
+        // const rosters = raceData.rosters.items;
+        // const promises = rosters.map(async (roster) => {
+        //     let points = calculateRosterPoints(roster.driver_order);
+        //     return client.graphql({
+        //         query: updateRoster,
+        //         variables: { input: { id: roster.id, total_points: points } },
+        //     });
+        // });
+        // await Promise.all(promises);
+        // await getRaceData();
+        // setLoading(false);
+        // ---------------------------------------------------
         setLoading(true);
-        const rosters = raceData.rosters.items;
-        const promises = rosters.map(async (roster) => {
-            let points = calculateRosterPoints(roster.driver_order);
-            return client.graphql({
-                query: updateRoster,
-                variables: { input: { id: roster.id, total_points: points } },
-            });
-        });
+        const rosters = raceData.rosters;
+        const promises = (rosters as any)?.map(
+            async (roster: Schema["Roster"]["type"]) => {
+                let points = calculateRosterPoints(roster.driver_order);
+                console.log("Roster points", points);
+                return client.models.Roster.update({
+                    id: roster.id,
+                    total_points: points,
+                });
+            }
+        );
         await Promise.all(promises);
         await getRaceData();
         setLoading(false);
     };
 
-    const calculateRosterPoints = (rosterOrder) => {
-        let points = 0;
-        rosterOrder = JSON.parse(rosterOrder[0]);
-        rosterOrder.forEach((driver) => {
-            // Get predicted place
-            let [abrev, place] = driver.split("-");
-            place = parseInt(place);
+    const calculateRosterPoints = (rosterOrder: any) => {
+        // let points = 0;
+        // rosterOrder = JSON.parse(rosterOrder[0]);
+        // rosterOrder.forEach((driver) => {
+        //     // Get predicted place
+        //     let [abrev, place] = driver.split("-");
+        //     place = parseInt(place);
 
-            // Find match in results
-            let res = driverOrder.findIndex((x) => x.id === abrev);
-            let actualPlace = res + 1;
-            if (actualPlace == place) {
-                points += mapPositionToPoints(place);
+        //     // Find match in results
+        //     let res = driverOrder.findIndex((x) => x.id === abrev);
+        //     let actualPlace = res + 1;
+        //     if (actualPlace == place) {
+        //         points += mapPositionToPoints(place);
+        //     }
+        // });
+        // return points;
+        let points = 0;
+        rosterOrder.forEach((driver: string, i: number) => {
+            // Predicted Place
+            const predictedPlace = i + 1;
+
+            // Get driver's actual finishing place
+            let result = driverOrder?.findIndex((x) => x === driver);
+            let actualPlace = (result || -10) + 1;
+            if (actualPlace == predictedPlace) {
+                points += mapPositionToPoints(predictedPlace);
             }
         });
         return points;
     };
 
     const updateUserScores = async () => {
-        setLoading(true);
-        const rosters = raceData.rosters.items;
-        const promises = rosters.map(async (roster) => {
-            let user = roster.user.id;
-            let result = await client.graphql({
-                query: getUser,
-                variables: { id: user },
-            });
-            let totalPoints = result.data.getUser.total_points;
-            let newPoints = totalPoints + roster.total_points;
-            return client.graphql({
-                query: updateUser,
-                variables: { input: { id: user, total_points: newPoints } },
-            });
-        });
-        await Promise.all(promises);
-        setLoading(false);
+        return;
+        // setLoading(true);
+        // const rosters = raceData.rosters.items;
+        // const promises = rosters.map(async (roster) => {
+        //     let user = roster.user.id;
+        //     let result = await client.graphql({
+        //         query: getUser,
+        //         variables: { id: user },
+        //     });
+        //     let totalPoints = result.data.getUser.total_points;
+        //     let newPoints = totalPoints + roster.total_points;
+        //     return client.graphql({
+        //         query: updateUser,
+        //         variables: { input: { id: user, total_points: newPoints } },
+        //     });
+        // });
+        // await Promise.all(promises);
+        // setLoading(false);
     };
 
     return (
@@ -278,11 +309,11 @@ export default function ScoreRace({
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <RosterEditor
+                {/* <RosterEditor
                     driverData={drivers}
                     driverOrder={driverOrder}
                     setDriverOrder={setDriverOrder}
-                />
+                /> */}
             </Dialog>
         </>
     );

@@ -17,14 +17,14 @@ export default function ResultsPreview({
                     </tr>
                 </thead>
                 <tbody>
-                    {results
+                    {(results as any)
                         .sort(
                             (
                                 a: Schema["Result"]["type"],
                                 b: Schema["Result"]["type"]
                             ) => (b.points || 0) - (a.points || 0)
                         )
-                        .map((result: Schema["Result"]["type"], i: int) => {
+                        .map((result: Schema["Result"]["type"], i: number) => {
                             return (
                                 <tr
                                     key={i}
