@@ -57,13 +57,13 @@ export default function ScoreRace({
     const getDefaultOrder = (drivers: any) => {
         let TEAM_ORDER = [
             "Red Bull",
-            "Ferrari",
             "McLaren",
+            "Ferrari",
             "Mercedes",
-            "Aston Martin",
             "Williams",
-            "Alpine",
+            "Aston Martin",
             "Haas",
+            "Alpine",
             "RB",
             "Kick",
         ];
@@ -159,6 +159,7 @@ export default function ScoreRace({
         // ---------------------------------------------------
         setLoading(true);
         const rosters = raceData.rosters;
+        console.log(rosters);
         const promises = (rosters as any)?.map(
             async (roster: Schema["Roster"]["type"]) => {
                 let points = calculateRosterPoints(roster.driver_order);
@@ -197,7 +198,7 @@ export default function ScoreRace({
 
             // Get driver's actual finishing place
             let result = driverOrder?.findIndex((x) => x === driver);
-            let actualPlace = (result || -10) + 1;
+            let actualPlace = result + 1 || -10;
             if (actualPlace == predictedPlace) {
                 points += mapPositionToPoints(predictedPlace);
             }
@@ -206,7 +207,6 @@ export default function ScoreRace({
     };
 
     const updateUserScores = async () => {
-        return;
         // setLoading(true);
         // const rosters = raceData.rosters.items;
         // const promises = rosters.map(async (roster) => {
@@ -224,6 +224,23 @@ export default function ScoreRace({
         // });
         // await Promise.all(promises);
         // setLoading(false);
+        setLoading(true);
+        const rosters = raceData.rosters;
+        const promises = (rosters as any)?.map(
+            async (roster: Schema["Roster"]["type"]) => {
+                let user = await roster.user;
+                let userId = (user as any).id;
+                let result = await client.models.User.get({ id: userId });
+                let totalPoints = result.data?.total_points || 0;
+                let newPoints = totalPoints + (roster.total_points || 0);
+                return client.models.User.update({
+                    id: userId,
+                    total_points: newPoints,
+                });
+            }
+        );
+        await Promise.all(promises);
+        setLoading(false);
     };
 
     return (
@@ -309,11 +326,11 @@ export default function ScoreRace({
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                {/* <RosterEditor
-                    driverData={drivers}
-                    driverOrder={driverOrder}
+                <RosterEditor
+                    driverData={drivers as any}
+                    driverOrder={driverOrder || []}
                     setDriverOrder={setDriverOrder}
-                /> */}
+                />
             </Dialog>
         </>
     );

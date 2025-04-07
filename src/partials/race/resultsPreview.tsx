@@ -24,6 +24,7 @@ export default function ResultsPreview({
                                 b: Schema["Result"]["type"]
                             ) => (b.points || 0) - (a.points || 0)
                         )
+                        .slice(0, 10)
                         .map((result: Schema["Result"]["type"], i: number) => {
                             return (
                                 <tr

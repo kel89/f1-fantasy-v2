@@ -85,7 +85,7 @@ export default function Race({}) {
     const getDriverData = async () => {
         const result = await client.models.Driver.list();
         console.log("Drivers", result.data);
-        setDrivers(result.data);
+        setDrivers(result.data as Schema["Driver"]["type"][]);
     };
 
     // If there is a roster, lets keep track of it
@@ -153,12 +153,12 @@ export default function Race({}) {
                                                 raceData={raceData}
                                                 getRaceData={getRaceData}
                                             />
-                                            {/* <ScoreRace
+                                            <ScoreRace
                                                 raceData={raceData}
-                                                drivers={drivers}
+                                                drivers={drivers || []}
                                                 getRaceData={getRaceData}
                                                 getDriverData={getDriverData}
-                                            /> */}
+                                            />
                                         </>
                                     ) : null}
                                 </div>
