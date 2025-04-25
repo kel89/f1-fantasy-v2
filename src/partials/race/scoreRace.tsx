@@ -198,7 +198,12 @@ export default function ScoreRace({
 
             // Get driver's actual finishing place
             let result = driverOrder?.findIndex((x) => x === driver);
-            let actualPlace = result + 1 || -10;
+            let actualPlace;
+            if (result) {
+                actualPlace = result + 1 || -10;
+            } else {
+                actualPlace = -10;
+            }
             if (actualPlace == predictedPlace) {
                 points += mapPositionToPoints(predictedPlace);
             }
