@@ -74,7 +74,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
         place: any
     ) => {
         let match: { place: number }[] = raceResults.filter(
-            (x: any) => x?.driver?.id === driver.id
+            (x: any) => x?.driver_id === driver.id
         );
         if (match.length > 0) {
             let truePlace = match[0].place;
@@ -94,11 +94,10 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
                 let driver = drivers.find(
                     (x) => x.abbreviation === abbreviation
                 );
-                console.log(driver);
                 if (!driver) {
                     return null;
                 }
-                const bgClassColor = getBackgroundColor(abbreviation, i);
+                const bgClassColor = getBackgroundColor(driver, i);
                 return (
                     <div
                         key={i}
