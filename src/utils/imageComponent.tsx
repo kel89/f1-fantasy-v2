@@ -1,4 +1,24 @@
 import { useState, useEffect, ReactElement } from "react";
+import Alb from "../../assets/drivers/alb.png";
+import Alo from "../../assets/drivers/alo.png";
+import Bot from "../../assets/drivers/bot.png";
+import Gas from "../../assets/drivers/gas.png";
+import Ham from "../../assets/drivers/ham.png";
+import Hul from "../../assets/drivers/hul.png";
+import Lec from "../../assets/drivers/lec.png";
+import Mag from "../../assets/drivers/mag.png";
+import Nor from "../../assets/drivers/nor.png";
+import Oco from "../../assets/drivers/oco.png";
+import Per from "../../assets/drivers/per.png";
+import Pias from "../../assets/drivers/pias.png";
+import Ric from "../../assets/drivers/ric.png";
+import Rus from "../../assets/drivers/rus.png";
+import Sai from "../../assets/drivers/sai.png";
+import Sar from "../../assets/drivers/sar.png";
+import Str from "../../assets/drivers/str.png";
+import Tsu from "../../assets/drivers/tsu.png";
+import Ver from "../../assets/drivers/ver.png";
+import Zhou from "../../assets/drivers/zhou.png";
 
 // Helper function to get the image element based on the string
 const getImageElement = async (imageName: string, imageClasses: string) => {
