@@ -26,13 +26,17 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
 
     // Sort the results if there are any?
     useEffect(() => {
-        if (rosterData && (rosterData.race as any)?.result) {
-            let resultData = ((rosterData.race as any).result as any).items;
-            resultData
-                .sort((a: any, b: any) => b.points - a.points)
-                .forEach((d: any, i: any) => (d["place"] = i + 1));
-            setRaceResults(resultData);
-        }
+        const fillRestults = async () => {
+            const raceData = await rosterData?.race();
+            const resultsData = await raceData?.data?.result();
+            if (resultsData) {
+                resultsData.data
+                    .sort((a: any, b: any) => b.points - a.points)
+                    .forEach((d: any, i: any) => (d["place"] = i + 1));
+                setRaceResults(resultsData.data as any);
+            }
+        };
+        fillRestults();
     }, [rosterData]);
 
     const getData = async () => {
@@ -66,11 +70,11 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
     };
 
     const getBackgroundColor = (
-        driverAbbreviation: string | undefined,
+        driver: Schema["Driver"]["type"],
         place: any
     ) => {
         let match: { place: number }[] = raceResults.filter(
-            (x: any) => x?.driver?.abbreviation === driverAbbreviation
+            (x: any) => x?.driver?.id === driver.id
         );
         if (match.length > 0) {
             let truePlace = match[0].place;
@@ -90,6 +94,7 @@ export default function RosterPreview({ id, toggler }: RosterPreviewProps) {
                 let driver = drivers.find(
                     (x) => x.abbreviation === abbreviation
                 );
+                console.log(driver);
                 if (!driver) {
                     return null;
                 }
